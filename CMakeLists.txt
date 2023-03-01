@@ -1,4 +1,5 @@
-cmake_minimum_required (VERSION 3.11)
+cmake_minimum_required (VERSION 3.24)
+# //jarek: todo change version
 
 # --- Fetch FTXUI --------------------------------------------------------------
 include(FetchContent)
@@ -35,24 +36,26 @@ project(rgb-tui
   VERSION 1.0.0
 )
 
-add_executable(rgb-tui src/main.cpp)
+set(SOURCES
+    src/MainComponent.cpp
+    src/Helpers.cpp
+)
+
+
+add_executable(${PROJECT_NAME} ${SOURCES} src/main.cpp)
 target_include_directories(rgb-tui PRIVATE src)
 
 target_link_libraries(rgb-tui
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
-  PRIVATE ftxui::component # Not needed for this example.
+  PRIVATE ftxui::component
   PRIVATE fmt::fmt
 )
 
-# C++17 is used. We requires fold expressions at least.
-set_target_properties(rgb-tui PROPERTIES CXX_STANDARD 17)
-
-# ------------------------------------------------------------------------------
+set_target_properties(rgb-tui PROPERTIES CXX_STANDARD 20)
 
 install(TARGETS rgb-tui RUNTIME DESTINATION "bin")
 
-# ------------------------------------------------------------------------------
 if (UNIX AND NOT APPLE)
   set(CPACK_GENERATOR "DEB;External;RPM;STGZ;TBZ2;TGZ;TXZ;TZ;TZST;ZIP")
 elseif (UNIX AND APPLE)
